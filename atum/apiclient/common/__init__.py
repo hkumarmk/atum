@@ -94,3 +94,25 @@ class BaseAPIClient(object):
                     response.status_code, response.reason, result["message"]))
 
         return result
+
+
+def to_object(data, field_maps, cls):
+    """It does below stuffs
+    1. Convert the data to common convention,
+    2. Wrap the converted data to provided class
+       and return the instance of that class
+
+    :param data: this data should be either a list of dicts or dict itself
+    :param field_maps: a dict of mapping values in form of {mapping: original}
+    :param cls: Class to which the data to be wrapped
+    :return: instance of cls
+    """
+    if isinstance(data, list):
+        for instance in data:
+            for mapping, orig in field_maps.items():
+                instance[mapping] = instance.pop(orig, None)
+        return [cls(**instance) for instance in data]
+    elif isinstance(data, dict):
+        for mapping, orig in field_maps.items():
+            data[mapping] = data.pop(orig, None)
+        return cls(**data)
