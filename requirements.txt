@@ -1,3 +1,5 @@
 future
 requests
-
+django
+djangorestframework
+jsonfield

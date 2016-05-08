@@ -3,3 +3,5 @@
 .idea
 *.egg-info
 *.pyc
+*.sqlite3
+migrations/
