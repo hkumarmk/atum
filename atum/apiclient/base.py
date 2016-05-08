@@ -6,6 +6,8 @@ from future.utils import with_metaclass, viewitems
 
 from abc import ABCMeta, abstractmethod
 
+from atum.apiclient import to_object
+
 import json
 import requests
 
@@ -41,7 +43,7 @@ class AtumObject(object):
         filters = {'id': id_}
         obj = self.list(filters)
         if obj:
-            return obj[0]
+            return to_object(obj[0])
         else:
             raise exceptions.UnknownObjectException('No filters available with filters %s' % filters)
 

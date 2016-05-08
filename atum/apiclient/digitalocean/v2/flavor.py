@@ -20,7 +20,7 @@ class Flavor(APIClient, FlavorBase):
             "x_regions": "regions",
             }
 
-    def list(self, filters=None, wrap_to_object=True):
+    def list(self, filters=None):
         # URL https://api.digitalocean.com/v2/sizes
         result = self.request("sizes", "GET")["sizes"]
         if filters:
@@ -28,8 +28,4 @@ class Flavor(APIClient, FlavorBase):
         else:
             flavors = result
 
-        if wrap_to_object:
-            return to_object(flavors, self.field_map, FlavorObject)
-        else:
-            return flavors
-
+        return to_object(flavors, self.field_map, FlavorObject)

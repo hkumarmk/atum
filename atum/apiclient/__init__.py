@@ -4,10 +4,10 @@ from builtins import *
 from future.utils import viewitems
 from atum.common import exceptions
 
-DIGITALOCEAN = "DigitalOcean"
+DIGITALOCEAN = "digitalocean"
 
 
-def to_object(data, field_maps, cls):
+def to_object(data, field_maps, cls, wrap=False):
     """It does below stuffs
     1. Convert the data to common convention,
     2. Wrap the converted data to provided class
@@ -16,17 +16,24 @@ def to_object(data, field_maps, cls):
     :param data: this data should be either a list of dicts or dict itself
     :param field_maps: a dict of mapping values in form of {mapping: original}
     :param cls: Class to which the data to be wrapped
+    :param wrap: Whether to wrap the data in the class or not
     :return: instance of cls
     """
     if isinstance(data, list):
         for instance in data:
             for mapping, orig in viewitems(field_maps):
                 instance[mapping] = instance.get(orig, None)
-        return [cls(**instance) for instance in data]
+        if wrap:
+            return [cls(**instance) for instance in data]
+        else:
+            return data
     elif isinstance(data, dict):
         for mapping, orig in viewitems(field_maps):
             data[mapping] = data.pop(orig, None)
-        return cls(**data)
+        if wrap:
+            return cls(**data)
+        else:
+            return data
 
 
 def get_client(provider, auth, endpoint=None):
