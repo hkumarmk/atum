@@ -29,6 +29,6 @@ class FlavorObject(object):
         self.x_ephemeral_disk = kwargs.get("ephemeral", None)
         self.x_public = kwargs.get("is_public", False)
         self.x_regions = kwargs.get("regions", None)
-        self.x_price = kwargs.get("price", None)
-        self.x_price_monthly = kwargs.get("price_monthly", None)
-
+        self.x_cph = kwargs.get("price", None)
+        self.x_cpm = kwargs.get("price_monthly", None)
+        self.x_id = kwargs.get("id", None)

@@ -1,6 +1,6 @@
-from atum.apiclient.common.flavor import FlavorBase, FlavorObject
-from atum.apiclient.digitalocean.base import APIClient
-from atum.apiclient.common import to_object
+from atum.apiclient.flavor import FlavorBase, FlavorObject
+from atum.apiclient import to_object
+from atum.apiclient.digitalocean.v2.base import APIClient
 
 
 class Flavor(APIClient, FlavorBase):

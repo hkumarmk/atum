@@ -1,4 +1,4 @@
-from atum.apiclient.common import BaseConnection, BaseAPIClient
+from atum.apiclient.base import BaseConnection, BaseAPIClient
 
 
 class Connection(BaseConnection):
