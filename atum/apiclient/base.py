@@ -14,10 +14,11 @@ import requests
 from atum.common import exceptions
 
 
-class AtumObject(object):
+class AtumBase(object):
 
     def __init__(self):
         self.field_map = {}
+        self.object_class = None
 
     def list(self, filters=None):
         pass
@@ -39,11 +40,11 @@ class AtumObject(object):
             except:
                 raise exceptions.InvalidObjectException('No such filter exist in the data - %s' % filters)
 
-    def get(self, id_):
+    def get(self, id_, wrap=False):
         filters = {'id': id_}
-        obj = self.list(filters)
+        obj = self.list(filters, wrap)
         if obj:
-            return to_object(obj[0])
+            return obj[0]
         else:
             raise exceptions.UnknownObjectException('No filters available with filters %s' % filters)
 
@@ -134,3 +135,11 @@ class BaseAPIClient(object):
                     response.status_code, response.reason, result["message"]))
 
         return result
+
+
+class BaseObject(object):
+    """A Base class to derive all *Object classes
+    to wrap the data got from get requests"""
+    def __init__(self, **kwargs):
+        for k, v in viewitems(kwargs):
+            setattr(self, k, v)

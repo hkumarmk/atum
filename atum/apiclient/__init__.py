@@ -20,20 +20,21 @@ def to_object(data, field_maps, cls, wrap=False):
     :return: instance of cls
     """
     if isinstance(data, list):
+        new_data = []
         for instance in data:
-            for mapping, orig in viewitems(field_maps):
-                instance[mapping] = instance.get(orig, None)
+            new_data.append({
+                mapping: instance.get(orig, None) for mapping, orig in viewitems(field_maps)
+            })
         if wrap:
-            return [cls(**instance) for instance in data]
+            return [cls(**instance) for instance in new_data]
         else:
-            return data
+            return new_data
     elif isinstance(data, dict):
-        for mapping, orig in viewitems(field_maps):
-            data[mapping] = data.pop(orig, None)
+        new_data = {mapping: data.get(orig, None) for mapping, orig in viewitems(field_maps)}
         if wrap:
-            return cls(**data)
+            return cls(**new_data)
         else:
-            return data
+            return new_data
 
 
 def get_client(provider, auth, endpoint=None):

@@ -1,6 +1,7 @@
 from atum.apiclient.digitalocean.v2.base import Connection
 from atum.apiclient.digitalocean.v2.flavor import Flavor
 from atum.apiclient.digitalocean.v2.image import Image
+from atum.apiclient.digitalocean.v2.region import Region
 
 DIGITALOCEAN_ENDPOINT = "https://api.digitalocean.com/v2/"
 
@@ -10,6 +11,7 @@ class DigitalOcean(object):
     def __init__(self, connection):
         self.flavor = Flavor(connection)
         self.image = Image(connection)
+        self.region = Region(connection)
 
 
 def get_digitalocean(auth, endpoint=DIGITALOCEAN_ENDPOINT):

@@ -12,12 +12,17 @@ class Image(APIClient, ImageBase):
     def __init__(self, connection):
         super().__init__(connection)
         self.field_map = {
-            'x_distribution': 'distribution',
-            'x_regions': 'regions',
-            'x_type': 'type',
+            "id": "id",
+            "name": "slug",
+            "public": "public",
+            "created_at": "created_at",
+            "min_disk": "min_disk_size",
+            "x_distribution": "distribution",
+            "x_regions": "regions",
+            "x_type": "type",
         }
 
-    def list(self, filters=None):
+    def list(self, filters=None, wrap=False):
         # URL https://api.digitalocean.com/v2/images
         result = self.request("images", "GET")["images"]
         if filters:
@@ -25,4 +30,4 @@ class Image(APIClient, ImageBase):
         else:
             images = result
 
-        return to_object(images, self.field_map, ImageObject)
+        return to_object(images, self.field_map, ImageObject, wrap)

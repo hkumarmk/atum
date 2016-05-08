@@ -1,7 +1,7 @@
-from atum.apiclient.base import AtumObject
+from atum.apiclient.base import AtumBase, BaseObject
 
 
-class ImageBase(AtumObject):
+class ImageBase(AtumBase):
     """Manage Images"""
 
     def create(self):
@@ -11,15 +11,6 @@ class ImageBase(AtumObject):
         pass
 
 
-class ImageObject(object):
-
-    def __init__(self, **kwargs):
-        self.id = kwargs.get("id", None)
-        self.name = kwargs.get("slug", None)
-        self.public = kwargs.get("public", None)
-        self.min_disk_size = kwargs.get("min_disk_size", None)
-        self.created_at = kwargs.get("created_at", None)
-
-        self.x_distribution = kwargs.get("distribution", None)
-        self.x_regions = kwargs.get("regions", None)
-        self.x_type = kwargs.get("type", None)
+class ImageObject(BaseObject):
+    """BaseObject constructor to set the attributes"""
+    pass
