@@ -20,7 +20,7 @@ class AtumBase(object):
         self.field_map = {}
         self.object_class = None
 
-    def list(self, filters=None):
+    def list(self, filters=None, wrap=None):
         pass
 
     def _filter(self, filters, data):
@@ -37,7 +37,7 @@ class AtumBase(object):
                         if all([True
                                 if getattr(i, 'extra')[k] == v else False
                                 for k, v in viewitems(filters)])]
-            except:
+            except AttributeError:
                 raise exceptions.InvalidObjectException('No such filter exist in the data - %s' % filters)
 
     def get(self, id_, wrap=False):
@@ -45,8 +45,6 @@ class AtumBase(object):
         obj = self.list(filters, wrap)
         if obj:
             return obj[0]
-        else:
-            raise exceptions.UnknownObjectException('No filters available with filters %s' % filters)
 
     @staticmethod
     def to_json(data):

@@ -1,8 +1,8 @@
 from atum.apiclient.base import AtumBase, BaseObject
 
 
-class RegionBase(AtumBase):
-    """Manage Regions"""
+class ServerBase(AtumBase):
+    """Manage Servers"""
 
     def create(self):
         pass
@@ -11,6 +11,6 @@ class RegionBase(AtumBase):
         pass
 
 
-class RegionObject(BaseObject):
+class ServerObject(BaseObject):
     """BaseObject constructor to set the attributes"""
     pass
