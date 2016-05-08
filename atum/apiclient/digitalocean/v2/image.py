@@ -17,7 +17,7 @@ class Image(APIClient, ImageBase):
             'x_type': 'type',
         }
 
-    def list(self, filters=None, wrap_to_object=True):
+    def list(self, filters=None):
         # URL https://api.digitalocean.com/v2/images
         result = self.request("images", "GET")["images"]
         if filters:
@@ -25,7 +25,4 @@ class Image(APIClient, ImageBase):
         else:
             images = result
 
-        if wrap_to_object:
-            return to_object(images, self.field_map, ImageObject)
-        else:
-            return images
+        return to_object(images, self.field_map, ImageObject)
