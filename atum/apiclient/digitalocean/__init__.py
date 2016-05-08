@@ -10,7 +10,7 @@ class DigitalOcean(object):
         self.flavor = Flavor(connection)
 
 
-def get_client(auth, endpoint=DIGITALOCEAN_ENDPOINT):
+def get_digitalocean(auth, endpoint=DIGITALOCEAN_ENDPOINT):
     """ get_client is the gateway to the provider.
     :param auth: A dictionary with appropriate keys.
     :param endpoint:

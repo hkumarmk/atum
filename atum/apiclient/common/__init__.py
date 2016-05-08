@@ -11,6 +11,11 @@ import requests
 
 from atum.common import exceptions
 
+DIGITALOCEAN = "DigitalOcean"
+
+PROVIDERS = {
+    DIGITALOCEAN: "atum.apiclient.digitalocean"
+}
 
 class BaseConnection(with_metaclass(ABCMeta)):
     def __init__(self, endpoint, auth, content_type="application/json"):
@@ -116,3 +121,17 @@ def to_object(data, field_maps, cls):
         for mapping, orig in field_maps.items():
             data[mapping] = data.pop(orig, None)
         return cls(**data)
+
+
+def get_client(provider, auth, endpoint=None):
+    """ get_client is the gateway to the provider.
+    :param provider: Provider type
+    :param auth: A dictionary with appropriate keys for provider auth.
+    :param endpoint: Provider endpoint
+    :return: provider instance
+    """
+    if provider == DIGITALOCEAN:
+        from atum.apiclient.digitalocean import get_digitalocean
+        return get_digitalocean(auth)
+    else:
+        exceptions.UnknownProviderException("Unknown provider - %s" % provider)

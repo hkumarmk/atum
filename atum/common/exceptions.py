@@ -35,6 +35,10 @@ class APIResponseError(AtumException):
     pass
 
 
+class UnknownProviderException(AtumException):
+    pass
+
+
 class IllegalArgumentError(ValueError):
     pass
 
