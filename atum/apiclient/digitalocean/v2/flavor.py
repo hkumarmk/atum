@@ -15,8 +15,9 @@ class Flavor(APIClient, FlavorBase):
             "id": "slug",
             "name": "slug",
             "cpus": "vcpus",
-            "cph": "price_hourly",
-            "cpm": "price_monthly",
+            "x_cph": "price_hourly",
+            "x_cpm": "price_monthly",
+            "x_regions": "regions",
             }
 
     def list(self, filters=None, wrap_to_object=True):
