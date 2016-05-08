@@ -12,10 +12,11 @@ class Flavor(APIClient, FlavorBase):
     def __init__(self, connection):
         super().__init__(connection)
         self.field_map = {
-            'name': 'slug',
-            'cpus': 'vcpus',
-            'cph': 'price_hourly',
-            'cpm': 'price_monthly',
+            "id": "slug",
+            "name": "slug",
+            "cpus": "vcpus",
+            "cph": "price_hourly",
+            "cpm": "price_monthly",
             }
 
     def list(self, filters=None, wrap_to_object=True):

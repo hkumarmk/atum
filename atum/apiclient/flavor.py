@@ -4,9 +4,6 @@ from atum.apiclient.base import AtumObject
 class FlavorBase(AtumObject):
     """Manage Flavors"""
 
-    def list(self, filters=None):
-        pass
-
     def create(self):
         pass
 
@@ -17,6 +14,7 @@ class FlavorBase(AtumObject):
 class FlavorObject(object):
 
     def __init__(self, **kwargs):
+        self.id = kwargs.get("id", None)
         self.name = kwargs.get("name", None)
         self.memory = kwargs.get("memory", None)
         self.cpus = kwargs.get("cpus", None)
@@ -28,6 +26,5 @@ class FlavorObject(object):
         self.x_ephemeral_disk = kwargs.get("ephemeral", None)
         self.x_public = kwargs.get("is_public", False)
         self.x_regions = kwargs.get("regions", None)
-        self.x_cph = kwargs.get("price", None)
-        self.x_cpm = kwargs.get("price_monthly", None)
-        self.x_id = kwargs.get("id", None)
+        self.x_cph = kwargs.get("cph", None)
+        self.x_cpm = kwargs.get("cpm", None)

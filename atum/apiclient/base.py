@@ -18,7 +18,7 @@ class AtumObject(object):
         self.field_map = {}
 
     def list(self, filters=None):
-        raise NotImplementedError
+        pass
 
     def _filter(self, filters, data):
         for m, o in viewitems(self.field_map):
@@ -37,13 +37,8 @@ class AtumObject(object):
             except:
                 raise exceptions.InvalidObjectException('No such filter exist in the data - %s' % filters)
 
-    def get(self, name=None, filters=None):
-        if name:
-            if not filters:
-                filters = {'name': name}
-            else:
-                filters.update({'name': name})
-
+    def get(self, id_):
+        filters = {'id': id_}
         obj = self.list(filters)
         if obj:
             return obj[0]
