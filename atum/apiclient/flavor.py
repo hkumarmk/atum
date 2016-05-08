@@ -1,11 +1,10 @@
+from atum.apiclient.base import AtumObject
 
-class FlavorBase(object):
+
+class FlavorBase(AtumObject):
     """Manage Flavors"""
 
-    def list(self):
-        pass
-
-    def get(self):
+    def list(self, filters=None):
         pass
 
     def create(self):

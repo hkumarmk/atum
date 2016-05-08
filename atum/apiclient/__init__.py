@@ -1,6 +1,7 @@
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 from builtins import *
+from future.utils import viewitems
 from atum.common import exceptions
 
 DIGITALOCEAN = "DigitalOcean"
@@ -19,11 +20,11 @@ def to_object(data, field_maps, cls):
     """
     if isinstance(data, list):
         for instance in data:
-            for mapping, orig in field_maps.items():
+            for mapping, orig in viewitems(field_maps):
                 instance[mapping] = instance.pop(orig, None)
         return [cls(**instance) for instance in data]
     elif isinstance(data, dict):
-        for mapping, orig in field_maps.items():
+        for mapping, orig in viewitems(field_maps):
             data[mapping] = data.pop(orig, None)
         return cls(**data)
 

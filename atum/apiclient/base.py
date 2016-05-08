@@ -2,7 +2,7 @@ from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 from builtins import *
 from future.moves.urllib.parse import urljoin
-from future.utils import with_metaclass
+from future.utils import with_metaclass, viewitems
 
 from abc import ABCMeta, abstractmethod
 
@@ -10,6 +10,49 @@ import json
 import requests
 
 from atum.common import exceptions
+
+
+class AtumObject(object):
+
+    def __init__(self):
+        self.field_map = {}
+
+    def list(self, filters=None):
+        raise NotImplementedError
+
+    def _filter(self, filters, data):
+        for m, o in viewitems(self.field_map):
+            if m in filters and o not in filters:
+                filters[o] = filters.pop(m, None)
+        try:
+            return [i for i in data
+                    if all([True if i.get(k) == v else False
+                            for k, v in viewitems(filters)])]
+        except AttributeError:
+            try:
+                return [i for i in data
+                        if all([True
+                                if getattr(i, 'extra')[k] == v else False
+                                for k, v in viewitems(filters)])]
+            except:
+                raise exceptions.InvalidObjectException('No such filter exist in the data - %s' % filters)
+
+    def get(self, name=None, filters=None):
+        if name:
+            if not filters:
+                filters = {'name': name}
+            else:
+                filters.update({'name': name})
+
+        obj = self.list(filters)
+        if obj:
+            return obj[0]
+        else:
+            raise exceptions.UnknownObjectException('No filters available with filters %s' % filters)
+
+    @staticmethod
+    def to_json(data):
+        return json.dumps(data)
 
 
 class BaseConnection(with_metaclass(ABCMeta)):
