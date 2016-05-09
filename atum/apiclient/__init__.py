@@ -1,10 +1,19 @@
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
-from builtins import *
-from future.utils import viewitems
+from future.utils import viewitems, viewkeys
 from atum.common import exceptions
+from atum.apiclient.base import BaseObject
 
 DIGITALOCEAN = "digitalocean"
+
+
+item_object_factory_classes = {
+    "FlavorObject": None,
+    "ImageObject": None,
+    "RegionObject": None,
+    "ServerObject": None,
+    "DomainObject": None
+}
 
 
 def to_object(data, field_maps, cls, wrap=False):
@@ -49,3 +58,21 @@ def get_client(provider, auth, endpoint=None):
         return get_digitalocean(auth)
     else:
         exceptions.UnknownProviderException("Unknown provider - %s" % provider)
+
+
+def item_object_class_factory(name, base_class=BaseObject):
+    """ Factory function to generate *Object classes
+    :param name: name of the class
+    :param base_class: base class, Default: BaseObject
+    :return: Class derived from base_class
+    """
+    newclass = type(str(name), (base_class,), {})
+    item_object_factory_classes.update({name: newclass})
+    return newclass
+
+##
+# Register all Classes - These classes are require to wrap the data to object
+# based classes by to_object().
+##
+for fc in viewkeys(item_object_factory_classes):
+    item_object_class_factory(fc)

@@ -3,10 +3,11 @@ from __future__ import (absolute_import, division,
 from builtins import *
 from atum.apiclient import to_object
 from atum.apiclient.digitalocean.v2.base import APIClient
-from atum.apiclient.region import RegionBase, RegionObject
+from atum.apiclient.base import AtumBase
+from atum.apiclient import item_object_factory_classes
 
 
-class Region(APIClient, RegionBase):
+class Region(APIClient, AtumBase):
     """Manage Regions."""
 
     def __init__(self, connection):
@@ -18,7 +19,6 @@ class Region(APIClient, RegionBase):
             "x_features": "features",
             "x_flavors": "sizes",
         }
-        self.object_class = RegionObject
 
     def list(self, filters=None, wrap=False):
         # URL https://api.digitalocean.com/v2/regions
@@ -28,4 +28,5 @@ class Region(APIClient, RegionBase):
         else:
             regions = result
 
-        return to_object(regions, self.field_map, RegionObject, wrap)
+        return to_object(regions, self.field_map,
+                         item_object_factory_classes["RegionObject"], wrap)

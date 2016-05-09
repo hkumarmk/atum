@@ -3,10 +3,11 @@ from __future__ import (absolute_import, division,
 from builtins import *
 from atum.apiclient import to_object
 from atum.apiclient.digitalocean.v2.base import APIClient
-from atum.apiclient.domain import DomainBase, DomainObject
+from atum.apiclient.base import AtumBase
+from atum.apiclient import item_object_factory_classes
 
 
-class Domain(APIClient, DomainBase):
+class Domain(APIClient, AtumBase):
     """Manage Domains."""
 
     def __init__(self, connection):
@@ -17,7 +18,6 @@ class Domain(APIClient, DomainBase):
             "ttl": "ttl",
             "zone": "zone_file",
         }
-        self.object_class = DomainObject
 
     def list(self, filters=None, wrap=False):
         # URL https://api.digitalocean.com/v2/domains
@@ -27,4 +27,5 @@ class Domain(APIClient, DomainBase):
         else:
             domains = result
 
-        return to_object(domains, self.field_map, DomainObject, wrap)
+        return to_object(domains, self.field_map,
+                         item_object_factory_classes['DomainObject'], wrap)

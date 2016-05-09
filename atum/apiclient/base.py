@@ -6,8 +6,6 @@ from future.utils import with_metaclass, viewitems
 
 from abc import ABCMeta, abstractmethod
 
-from atum.apiclient import to_object
-
 import json
 import requests
 
@@ -21,6 +19,12 @@ class AtumBase(object):
         self.object_class = None
 
     def list(self, filters=None, wrap=None):
+        pass
+
+    def create(self):
+        pass
+
+    def delete(self):
         pass
 
     def _filter(self, filters, data):

@@ -3,10 +3,11 @@ from __future__ import (absolute_import, division,
 from builtins import *
 from atum.apiclient import to_object
 from atum.apiclient.digitalocean.v2.base import APIClient
-from atum.apiclient.image import ImageBase, ImageObject
+from atum.apiclient.base import AtumBase
+from atum.apiclient import item_object_factory_classes
 
 
-class Image(APIClient, ImageBase):
+class Image(APIClient, AtumBase):
     """Manage Images."""
 
     def __init__(self, connection):
@@ -30,4 +31,5 @@ class Image(APIClient, ImageBase):
         else:
             images = result
 
-        return to_object(images, self.field_map, ImageObject, wrap)
+        return to_object(images, self.field_map,
+                         item_object_factory_classes["ImageObject"], wrap)

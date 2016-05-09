@@ -3,10 +3,11 @@ from __future__ import (absolute_import, division,
 from builtins import *
 from atum.apiclient import to_object
 from atum.apiclient.digitalocean.v2.base import APIClient
-from atum.apiclient.server import ServerBase, ServerObject
+from atum.apiclient.base import AtumBase
+from atum.apiclient import item_object_factory_classes
 
 
-class Server(APIClient, ServerBase):
+class Server(APIClient, AtumBase):
     """Manage Servers."""
 
     def __init__(self, connection):
@@ -30,7 +31,6 @@ class Server(APIClient, ServerBase):
             "x_backup_ids": "backup_ids",
             "x_snapshot_ids": "snapshot_ids",
         }
-        self.object_class = ServerObject
 
     def list(self, filters=None, wrap=False):
         # URL https://api.digitalocean.com/v2/droplets
@@ -40,4 +40,5 @@ class Server(APIClient, ServerBase):
         else:
             servers = result
 
-        return to_object(servers, self.field_map, ServerObject, wrap)
+        return to_object(servers, self.field_map,
+                         item_object_factory_classes["ServerObject"], wrap)

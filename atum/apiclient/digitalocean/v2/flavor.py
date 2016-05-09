@@ -2,12 +2,13 @@ from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
 from builtins import *
 
-from atum.apiclient.flavor import FlavorBase, FlavorObject
+from atum.apiclient.base import AtumBase
+from atum.apiclient import item_object_factory_classes
 from atum.apiclient import to_object
 from atum.apiclient.digitalocean.v2.base import APIClient
 
 
-class Flavor(APIClient, FlavorBase):
+class Flavor(APIClient, AtumBase):
     """Manage Flavors"""
     def __init__(self, connection):
         super().__init__(connection)
@@ -32,4 +33,5 @@ class Flavor(APIClient, FlavorBase):
         else:
             flavors = result
 
-        return to_object(flavors, self.field_map, FlavorObject, wrap)
+        return to_object(flavors, self.field_map,
+                         item_object_factory_classes['FlavorObject'], wrap)
