@@ -1,8 +1,11 @@
 from __future__ import (absolute_import, division,
                         print_function, unicode_literals)
-from future.utils import viewitems, viewkeys
+from future.utils import viewitems, viewkeys, PY3
 from atum.common import exceptions
 from atum.apiclient.base import BaseObject
+
+if PY3:
+    from builtins import *
 
 DIGITALOCEAN = "digitalocean"
 

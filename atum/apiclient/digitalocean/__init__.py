@@ -1,9 +1,5 @@
-from .v2.base import Connection
-from .v2.flavor import Flavor
-from .v2.image import Image
-from .v2.region import Region
-from .v2.server import Server
-from .v2.domain import Domain
+from .v2.base import Connection, do_v2_object_factory_classes
+from future.utils import viewitems
 
 DIGITALOCEAN_ENDPOINT = "https://api.digitalocean.com/v2/"
 
@@ -11,11 +7,8 @@ DIGITALOCEAN_ENDPOINT = "https://api.digitalocean.com/v2/"
 class DigitalOcean(object):
 
     def __init__(self, connection):
-        self.flavor = Flavor(connection)
-        self.image = Image(connection)
-        self.region = Region(connection)
-        self.server = Server(connection)
-        self.domain = Domain(connection)
+        for cls_name, cls in viewitems(do_v2_object_factory_classes):
+            setattr(self, cls_name.lower(), cls(connection))
 
 
 def get_digitalocean(auth, endpoint=DIGITALOCEAN_ENDPOINT):
