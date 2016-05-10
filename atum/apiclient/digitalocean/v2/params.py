@@ -1,4 +1,31 @@
 PARAMS = {
+    "sshkey": {
+        "field_map": {
+          "id": "id",
+          "name": "name",
+          "fingerprint": "fingerprint",
+          "public_key": "public_key",
+        },
+        "url": "account/keys",
+        "result_key": "ssh_keys",
+        "object_class_name": "SSHKeyObject",
+    },
+    "floating_ip": {
+        "field_map": {
+            "id": "ip",
+            "ip": "ip",
+            "server": "server",
+            "region": "region",
+        },
+        "object_class_name": "FloatingIPObject",
+    },
+    "tag": {
+      "field_map": {
+          "id": "name",
+          "name": "name",
+          "resources": "resources"
+      },
+    },
     "domain": {
         'field_map': {
             "id": "name",
@@ -7,6 +34,7 @@ PARAMS = {
             "zone": "zone_file",
         },
     },
+
     "flavor": {
         "field_map": {
             "id": "slug",

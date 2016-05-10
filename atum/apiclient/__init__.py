@@ -15,7 +15,10 @@ item_object_factory_classes = {
     "ImageObject": None,
     "RegionObject": None,
     "ServerObject": None,
-    "DomainObject": None
+    "DomainObject": None,
+    "SSHKeyObject": None,
+    "FloatingIPObject": None,
+    "TagObject": None,
 }
 
 

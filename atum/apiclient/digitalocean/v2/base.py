@@ -28,13 +28,16 @@ class APIClient(BaseAPIClient):
 
 
 def do_v2_object_class_factory(name, field_map, url, result_key=None,
+                               object_class_name=None,
                                base_classes=(APIClient, AtumBase)):
+
     """ Build Object specific classes (May be with common methods - read only methods)
     :param name: Name of the class
     :param field_map: a dict of field map
     :param url: Relative url based on DIGITALOCEAN_ENDPOINT
     :param result_key: Result key to be looked at Default: name + "s"
     :param base_classes: a tuple of base classes
+    :param object_class_name: object class name
     :return:
     """
 
@@ -54,9 +57,9 @@ def do_v2_object_class_factory(name, field_map, url, result_key=None,
         else:
             objs = result
 
-        object_cls_name = name.title() + "Object"
+        object_cls = object_class_name or name.title() + "Object"
         return to_object(objs, self.field_map,
-                         item_object_factory_classes[object_cls_name], wrap)
+                         item_object_factory_classes[object_cls], wrap)
 
     cls_dict = {
         "__init__": __init__,
@@ -81,6 +84,7 @@ for obj_name, params in viewitems(PARAMS):
     field_map = params.get("field_map", {})
     url = params.get("url", None)
     result_key = params.get("result_key", None)
+    object_class_name = params.get("object_class_name", None)
     ##
     # If url is not there in PARAMS, build it by appending "s" to name
     # This should work mostly
@@ -88,8 +92,12 @@ for obj_name, params in viewitems(PARAMS):
     if not url:
         url = obj_name + "s"
 
-    arguments = [class_name, field_map, url]
+    kw_arguments = {"name": class_name, "field_map": field_map, "url": url}
 
     if result_key:
-        arguments.append(result_key)
-    do_v2_object_class_factory(*arguments)
+        kw_arguments.update({"result_key": result_key})
+
+    if object_class_name:
+        kw_arguments.update({"object_class_name": object_class_name})
+
+    do_v2_object_class_factory(**kw_arguments)
