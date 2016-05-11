@@ -1,5 +1,5 @@
 PARAMS = {
-    "sshkey": {
+    "SSHKey": {
         "field_map": {
           "id": "id",
           "name": "name",
@@ -10,7 +10,7 @@ PARAMS = {
         "result_key": "ssh_keys",
         "object_class_name": "SSHKeyObject",
     },
-    "floating_ip": {
+    "FloatingIP": {
         "field_map": {
             "id": "ip",
             "ip": "ip",
@@ -18,15 +18,17 @@ PARAMS = {
             "region": "region",
         },
         "object_class_name": "FloatingIPObject",
+        "url": "floating_ips",
+
     },
-    "tag": {
+    "Tag": {
       "field_map": {
           "id": "name",
           "name": "name",
           "resources": "resources"
       },
     },
-    "domain": {
+    "Domain": {
         'field_map': {
             "id": "name",
             "name": "name",
@@ -34,8 +36,7 @@ PARAMS = {
             "zone": "zone_file",
         },
     },
-
-    "flavor": {
+    "Flavor": {
         "field_map": {
             "id": "slug",
             "name": "slug",
@@ -48,8 +49,9 @@ PARAMS = {
             "x_cpm": "price_monthly",
             "x_regions": "regions",
         },
+        "url": "sizes",
     },
-    "image": {
+    "Image": {
         "field_map": {
             "id": "id",
             "name": "slug",
@@ -61,7 +63,7 @@ PARAMS = {
             "x_type": "type",
         },
     },
-    "region": {
+    "Region": {
         "field_map": {
             "id": "slug",
             "name": "name",
@@ -70,7 +72,7 @@ PARAMS = {
             "x_flavors": "sizes",
         },
     },
-    "server": {
+    "Server": {
         "field_map": {
             "id": "id",
             "name": "name",
@@ -90,5 +92,6 @@ PARAMS = {
             "x_backup_ids": "backup_ids",
             "x_snapshot_ids": "snapshot_ids",
         },
+        "url": "droplets",
     },
 }

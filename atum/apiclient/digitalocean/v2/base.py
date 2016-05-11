@@ -80,7 +80,7 @@ def do_v2_object_class_factory(name, field_map, url, result_key=None,
 # in which case, they can be derived from these classes
 ##
 for obj_name, params in viewitems(PARAMS):
-    class_name = obj_name.title()
+    class_name = obj_name
     field_map = params.get("field_map", {})
     url = params.get("url", None)
     result_key = params.get("result_key", None)
@@ -90,7 +90,7 @@ for obj_name, params in viewitems(PARAMS):
     # This should work mostly
     ##
     if not url:
-        url = obj_name + "s"
+        url = obj_name.lower() + "s"
 
     kw_arguments = {"name": class_name, "field_map": field_map, "url": url}
 
