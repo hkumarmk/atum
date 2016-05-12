@@ -6,6 +6,7 @@ from atum.apiclient import item_object_factory_classes
 from atum.apiclient.base import BaseConnection, BaseAPIClient
 from future.utils import viewitems, PY3
 from .params import PARAMS
+import atum.common.exceptions as exceptions
 
 if PY3:
     from builtins import *
@@ -31,7 +32,7 @@ def do_v2_object_class_factory(name, field_map, url, result_key=None,
                                object_class_name=None,
                                base_classes=(APIClient, AtumBase)):
 
-    """ Build Object specific classes (May be with common methods - read only methods)
+    """ Build Object specific classes (May be with common methods)
     :param name: Name of the class
     :param field_map: a dict of field map
     :param url: Relative url based on DIGITALOCEAN_ENDPOINT
@@ -48,9 +49,10 @@ def do_v2_object_class_factory(name, field_map, url, result_key=None,
     def __init__(self, connection):
         APIClient.__init__(self, connection)
         self.field_map = field_map
+        self.url = url
 
     def list_(self, filters=None, wrap=False):
-        # URL https://api.digitalocean.com/v2/sizes
+        # URL https://api.digitalocean.com/v2/%s % url
         result = self.request(url, "GET")[result_key]
         if filters:
             objs = self._filter(filters, result)
@@ -61,10 +63,29 @@ def do_v2_object_class_factory(name, field_map, url, result_key=None,
         return to_object(objs, self.field_map,
                          item_object_factory_classes[object_cls], wrap)
 
+    def _id_or_object(self, id=None, obj=None):
+        if id:
+            return id
+        elif obj:
+            return obj.id
+        else:
+            raise exceptions.InvalidArgumentError("Either Object or id must be provided")
+
+    def delete(self, obj=None, id=None):
+        """ Delete the objects
+        :param obj: object
+        :param id: id - either id or sshkey must be provided
+        :return: None
+        """
+        id_ = self._id_or_object(id, obj)
+        return self.request("%s/%s" % (url, id_), "DELETE")
+
     cls_dict = {
         "__init__": __init__,
         "list": list_,
-        "field_map": field_map
+        "field_map": field_map,
+        "_id_or_object": _id_or_object,
+        "delete": delete,
     }
     cls = type(str(name), base_classes, cls_dict)
 

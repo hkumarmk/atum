@@ -39,7 +39,7 @@ class UnknownProviderException(AtumException):
     pass
 
 
-class IllegalArgumentError(ValueError):
+class InvalidArgumentError(ValueError):
     pass
 
 
