@@ -49,7 +49,7 @@ def do_v2_object_class_factory(name, field_map, url, result_key=None,
         APIClient.__init__(self, connection)
         self.field_map = field_map
 
-    def list(self, filters=None, wrap=False):
+    def list_(self, filters=None, wrap=False):
         # URL https://api.digitalocean.com/v2/sizes
         result = self.request(url, "GET")[result_key]
         if filters:
@@ -57,19 +57,20 @@ def do_v2_object_class_factory(name, field_map, url, result_key=None,
         else:
             objs = result
 
-        object_cls = object_class_name or name.title() + "Object"
+        object_cls = object_class_name or name.replace("Base", "") + "Object"
         return to_object(objs, self.field_map,
                          item_object_factory_classes[object_cls], wrap)
 
     cls_dict = {
         "__init__": __init__,
-        "list": list,
+        "list": list_,
         "field_map": field_map
     }
     cls = type(str(name), base_classes, cls_dict)
 
     do_v2_object_factory_classes.update({name: cls})
     return cls
+
 
 ##
 # Register all Classes - These classes are require to wrap the data to object
@@ -80,7 +81,7 @@ def do_v2_object_class_factory(name, field_map, url, result_key=None,
 # in which case, they can be derived from these classes
 ##
 for obj_name, params in viewitems(PARAMS):
-    class_name = obj_name
+    class_name = obj_name + 'Base'
     field_map = params.get("field_map", {})
     url = params.get("url", None)
     result_key = params.get("result_key", None)
@@ -101,3 +102,41 @@ for obj_name, params in viewitems(PARAMS):
         kw_arguments.update({"object_class_name": object_class_name})
 
     do_v2_object_class_factory(**kw_arguments)
+
+
+class Flavor(do_v2_object_factory_classes['FlavorBase']):
+    pass
+
+
+class Image(do_v2_object_factory_classes['ImageBase']):
+    pass
+
+
+class FloatingIP(do_v2_object_factory_classes['FloatingIPBase']):
+    pass
+
+
+class Tag(do_v2_object_factory_classes['TagBase']):
+    pass
+
+
+class Domain(do_v2_object_factory_classes['DomainBase']):
+    pass
+
+
+class Region(do_v2_object_factory_classes['RegionBase']):
+    pass
+
+
+class Server(do_v2_object_factory_classes['ServerBase']):
+    pass
+
+
+do_v2_object_classes = {"Flavor": Flavor,
+                        "Image": Image,
+                        "FloatingIP": FloatingIP,
+                        "Tag": Tag,
+                        "Domain": Domain,
+                        "Region": Region,
+                        "Server": Server
+                        }
