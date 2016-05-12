@@ -86,6 +86,7 @@ def do_v2_object_class_factory(name, field_map, url, result_key=None,
         "field_map": field_map,
         "_id_or_object": _id_or_object,
         "delete": delete,
+        "remove": delete,
     }
     cls = type(str(name), base_classes, cls_dict)
 

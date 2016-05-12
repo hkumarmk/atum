@@ -16,6 +16,8 @@ class Domain(do_v2_object_factory_classes['DomainBase']):
         return to_object(result, self.field_map,
                          item_object_factory_classes['DomainObject'], wrap)
 
+    create = add
+
     def get(self, obj=None, id=None, wrap=False):
         """ Retrieve an domain with ID
         :param id: domain id

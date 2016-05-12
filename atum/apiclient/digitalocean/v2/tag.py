@@ -15,6 +15,8 @@ class Tag(do_v2_object_factory_classes['TagBase']):
         return to_object(result, self.field_map,
                          item_object_factory_classes['TagObject'], wrap)
 
+    create = add
+
     def get(self, obj=None, id=None, wrap=False):
         """ Retrieve an tag with ID
         :param id: tag id

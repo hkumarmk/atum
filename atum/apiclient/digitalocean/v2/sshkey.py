@@ -16,6 +16,8 @@ class SSHKey(do_v2_object_factory_classes['SSHKeyBase']):
         return to_object(result, self.field_map,
                          item_object_factory_classes['SSHKeyObject'], wrap)
 
+    create = add
+
     def get(self, obj=None, id=None, wrap=False):
         """ Retrieve an ssh key with ID
         :param id: ssh key id
