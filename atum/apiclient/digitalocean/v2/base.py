@@ -137,10 +137,6 @@ class FloatingIP(do_v2_object_factory_classes['FloatingIPBase']):
     pass
 
 
-class Tag(do_v2_object_factory_classes['TagBase']):
-    pass
-
-
 class Domain(do_v2_object_factory_classes['DomainBase']):
     pass
 
@@ -156,7 +152,6 @@ class Server(do_v2_object_factory_classes['ServerBase']):
 do_v2_object_classes = {"Flavor": Flavor,
                         "Image": Image,
                         "FloatingIP": FloatingIP,
-                        "Tag": Tag,
                         "Domain": Domain,
                         "Region": Region,
                         "Server": Server
