@@ -51,7 +51,7 @@ def do_v2_object_class_factory(name, field_map, url, result_key=None,
         self.field_map = field_map
         self.url = url
 
-    def list_(self, filters=None, wrap=False):
+    def list_(self, filters=None, wrap=True):
         # URL https://api.digitalocean.com/v2/%s % url
         result = self.request(url, "GET")[result_key]
         if filters:
@@ -63,28 +63,18 @@ def do_v2_object_class_factory(name, field_map, url, result_key=None,
         return to_object(objs, self.field_map,
                          item_object_factory_classes[object_cls], wrap)
 
-    def _id_or_object(self, id=None, obj=None):
-        if id:
-            return id
-        elif obj:
-            return obj.id
-        else:
-            raise exceptions.InvalidArgumentError("Either Object or id must be provided")
-
-    def delete(self, obj=None, id=None):
+    def delete(self, obj):
         """ Delete the objects
         :param obj: object
         :param id: id - either id or sshkey must be provided
         :return: None
         """
-        id_ = self._id_or_object(id, obj)
-        return self.request("%s/%s" % (url, id_), "DELETE")
+        return self.request("%s/%s" % (url, obj.id), "DELETE")
 
     cls_dict = {
         "__init__": __init__,
         "list": list_,
         "field_map": field_map,
-        "_id_or_object": _id_or_object,
         "delete": delete,
         "remove": delete,
     }

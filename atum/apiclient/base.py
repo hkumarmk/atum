@@ -18,7 +18,7 @@ class AtumBase(object):
         self.field_map = {}
         self.object_class = None
 
-    def list(self, filters=None, wrap=None):
+    def list(self, filters=None, wrap=True):
         pass
 
     def create(self):
@@ -44,7 +44,7 @@ class AtumBase(object):
             except AttributeError:
                 raise exceptions.InvalidObjectException('No such filter exist in the data - %s' % filters)
 
-    def get(self, id_, wrap=False):
+    def get(self, id_, wrap=True):
         filters = {'id': id_}
         obj = self.list(filters, wrap)
         if obj:

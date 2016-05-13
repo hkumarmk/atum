@@ -22,7 +22,7 @@ item_object_factory_classes = {
 }
 
 
-def to_object(data, field_maps, cls, wrap=False):
+def to_object(data, field_maps, cls, wrap=True):
     """It does below stuffs
     1. Convert the data to common convention,
     2. Wrap the converted data to provided class

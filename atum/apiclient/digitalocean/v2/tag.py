@@ -4,7 +4,7 @@ from atum.apiclient import to_object
 
 class Tag(do_v2_object_factory_classes['TagBase']):
 
-    def add(self, name, wrap=False):
+    def add(self, name, wrap=True):
         """ Add tags
         :param name: Name of the key
         :param wrap: wrap the result into Object specific class
@@ -17,22 +17,18 @@ class Tag(do_v2_object_factory_classes['TagBase']):
 
     create = add
 
-    def get(self, obj=None, id=None, wrap=False):
+    def get(self, id, wrap=True):
         """ Retrieve an tag with ID
         :param id: tag id
-        :param obj: tag object either id or tag must be provided
         :return: tag key
         """
-        id_ = self._id_or_object(id, obj)
-        result = self.request("%s/%s" % (self.url, id_), "GET").get("tag", {})
+        result = self.request("%s/%s" % (self.url, id), "GET").get("tag", {})
         return to_object(result, self.field_map,
                          item_object_factory_classes['TagObject'], wrap)
 
-    def rename(self, new_name, obj=None, id=None, wrap=False):
-        id_ = self._id_or_object(id, obj)
+    def rename(self, new_name, obj, wrap=True):
         params = {"name": new_name}
-        print("%s/%s" % (self.url, id_))
-        result = self.request("%s/%s" % (self.url, id_), "PUT", params).get("tag", {})
+        result = self.request("%s/%s" % (self.url, obj.id), "PUT", params).get("tag", {})
         return to_object(result, self.field_map,
                          item_object_factory_classes['TagObject'], wrap)
 

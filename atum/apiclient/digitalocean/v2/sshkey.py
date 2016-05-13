@@ -4,7 +4,7 @@ from atum.apiclient import to_object
 
 class SSHKey(do_v2_object_factory_classes['SSHKeyBase']):
 
-    def add(self, name, public_key, wrap=False):
+    def add(self, name, public_key, wrap=True):
         """ Add sshkeys
         :param name: Name of the key
         :param public_key: SSH Public key string
@@ -18,21 +18,19 @@ class SSHKey(do_v2_object_factory_classes['SSHKeyBase']):
 
     create = add
 
-    def get(self, obj=None, id=None, wrap=False):
+    def get(self, id, wrap=True):
         """ Retrieve an ssh key with ID
-        :param id: ssh key id
-        :param obj: sshkey object either id or sshkey must be provided
+        :param id: sshkey id
         :return: ssh key
+        :param wrap: wrap the result into Object specific class instance
         """
-        id_ = self._id_or_object(id, sshkey)
-        result = self.request("%s/%s" % (self.url, id_), "GET").get("ssh_key", {})
+        result = self.request("%s/%s" % (self.url, id), "GET").get("ssh_key", {})
         return to_object(result, self.field_map,
                          item_object_factory_classes['SSHKeyObject'], wrap)
 
-    def rename(self, new_name, obj=None, id=None, wrap=False):
-        id_ = self._id_or_object(id, obj)
+    def rename(self, new_name, obj, wrap=True):
         params = {"name": new_name}
-        result = self.request("%s/%s" % (self.url, id_), "PUT", params).get("ssh_key", {})
+        result = self.request("%s/%s" % (self.url, obj.id), "PUT", params).get("ssh_key", {})
         return to_object(result, self.field_map,
                          item_object_factory_classes['SSHKeyObject'], wrap)
 

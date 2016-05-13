@@ -4,7 +4,7 @@ from atum.apiclient import to_object
 
 class Domain(do_v2_object_factory_classes['DomainBase']):
 
-    def add(self, name, ip_address, wrap=False):
+    def add(self, name, ip_address, wrap=True):
         """ Add domains
         :param name: Domain name
         :param ip_address: IP address to point to domain
@@ -18,14 +18,13 @@ class Domain(do_v2_object_factory_classes['DomainBase']):
 
     create = add
 
-    def get(self, obj=None, id=None, wrap=False):
+    def get(self, id, wrap=True):
         """ Retrieve an domain with ID
-        :param id: domain id
-        :param obj: domain object either id or domain must be provided
+        :param wrap: Wrap the result into object specific instance
+        :param obj: domain object
         :return: domain key
         """
-        id_ = self._id_or_object(id, obj)
-        result = self.request("%s/%s" % (self.url, id_), "GET").get("domain", {})
+        result = self.request("%s/%s" % (self.url, id), "GET").get("domain", {})
         return to_object(result, self.field_map,
                          item_object_factory_classes['DomainObject'], wrap)
 
