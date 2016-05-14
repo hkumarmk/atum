@@ -6,7 +6,6 @@ from atum.apiclient import item_object_factory_classes
 from atum.apiclient.base import BaseConnection, BaseAPIClient
 from future.utils import viewitems, PY3
 from .params import PARAMS
-import atum.common.exceptions as exceptions
 
 if PY3:
     from builtins import *
@@ -132,13 +131,8 @@ class Region(do_v2_object_factory_classes['RegionBase']):
     pass
 
 
-class Server(do_v2_object_factory_classes['ServerBase']):
-    pass
-
-
 do_v2_object_classes = {"Flavor": Flavor,
                         "Image": Image,
                         "FloatingIP": FloatingIP,
                         "Region": Region,
-                        "Server": Server
                         }

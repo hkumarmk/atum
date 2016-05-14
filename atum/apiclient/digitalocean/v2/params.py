@@ -82,7 +82,7 @@ PARAMS = {
             "status": "status",
             "created_at": "created_at",
             "image": "image",
-            "flavor": "flavor",
+            "flavor": "size",
             "networks": "networks",
             "region": "region",
             "x_tags": "tags",
