@@ -28,21 +28,14 @@ class AtumBase(object):
         pass
 
     def _filter(self, filters, data):
+
         for m, o in viewitems(self.field_map):
             if m in filters and o not in filters:
                 filters[o] = filters.pop(m, None)
-        try:
-            return [i for i in data
-                    if all([True if i.get(k) == v else False
-                            for k, v in viewitems(filters)])]
-        except AttributeError:
-            try:
-                return [i for i in data
-                        if all([True
-                                if getattr(i, 'extra')[k] == v else False
-                                for k, v in viewitems(filters)])]
-            except AttributeError:
-                raise exceptions.InvalidObjectException('No such filter exist in the data - %s' % filters)
+
+        return [i for i in data
+                if all([True if i.get(k) == v else False
+                        for k, v in viewitems(filters)])]
 
     def get(self, id_, wrap=True):
         filters = {'id': id_}

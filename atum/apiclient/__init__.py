@@ -22,7 +22,7 @@ item_object_factory_classes = {
 }
 
 
-def to_object(data, field_maps, cls, wrap=True):
+def to_object(data, field_maps, cls=None, wrap=True):
     """It does below stuffs
     1. Convert the data to common convention,
     2. Wrap the converted data to provided class
@@ -63,7 +63,7 @@ def get_client(provider, auth, endpoint=None):
         from atum.apiclient.digitalocean import get_digitalocean
         return get_digitalocean(auth)
     else:
-        exceptions.UnknownProviderException("Unknown provider - %s" % provider)
+        raise exceptions.UnknownProviderException("Unknown provider - %s" % provider)
 
 
 def item_object_class_factory(name, base_class=BaseObject):
@@ -73,7 +73,7 @@ def item_object_class_factory(name, base_class=BaseObject):
     :return: Class derived from base_class
     """
     newclass = type(str(name), (base_class,), {})
-    item_object_factory_classes.update({name: newclass})
+    item_object_factory_classes.update({name: newclass}),
     return newclass
 
 ##
