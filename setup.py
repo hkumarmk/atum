@@ -18,6 +18,10 @@ from setuptools import setup, find_packages
 with open('requirements.txt', 'r') as fp:
     requirements = [x.strip() for x in fp]
 
+with open('test-requirements.txt', 'r') as fp:
+    test_requirements = [x.strip() for x in fp]
+
+
 setup(
     name='atum',
     version='0.1',
@@ -26,7 +30,7 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=requirements,
-    tests_require=['mock', 'nose'],
+    tests_require=test_requirements,
     test_suite='nose.collector',
 )
 
