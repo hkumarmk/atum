@@ -37,9 +37,9 @@ class AtumBase(object):
                 if all([True if i.get(k) == v else False
                         for k, v in viewitems(filters)])]
 
-    def get(self, id_, wrap=True):
+    def get(self, id_, wrap=True, dc=None):
         filters = {'id': id_}
-        obj = self.list(filters, wrap)
+        obj = self.list(filters, wrap, dc)
         if obj:
             return obj[0]
 

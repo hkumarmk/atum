@@ -50,7 +50,7 @@ def do_v2_object_class_factory(name, field_map, url, result_key=None,
         self.field_map = field_map
         self.url = url
 
-    def list_(self, filters=None, wrap=True):
+    def list_(self, filters=None, wrap=True, dc=None):
         # URL https://api.digitalocean.com/v2/%s % url
         result = self.request(url, "GET")[result_key]
         if filters:
@@ -60,7 +60,7 @@ def do_v2_object_class_factory(name, field_map, url, result_key=None,
 
         object_cls = object_class_name or name.replace("Base", "") + "Object"
         return to_object(objs, self.field_map,
-                         item_object_factory_classes[object_cls], wrap)
+                         item_object_factory_classes[object_cls], wrap, dc)
 
     def delete(self, obj):
         """ Delete the objects

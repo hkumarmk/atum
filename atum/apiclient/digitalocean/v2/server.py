@@ -6,8 +6,9 @@ class Server(do_v2_object_factory_classes['ServerBase']):
 
     def add(self, name, region, flavor, image, ssh_keys=None,
             backups=False, ipv6=False, user_data=None,
-            private_networking=False, wrap=True):
+            private_networking=False, wrap=True, dc=None):
         """ Add servers
+        :param dc: Optional datacenter name added in the object
         :param private_networking: Enable/disable private Networking
         :param name: Name of the Server,
                     Can be a list of names in which case multiple servers
@@ -42,67 +43,68 @@ class Server(do_v2_object_factory_classes['ServerBase']):
                        "private_networking": private_networking})
         result = self.request(self.url, "POST", params).get("droplet", {})
         return to_object(result, self.field_map,
-                         item_object_factory_classes['ServerObject'], wrap)
+                         item_object_factory_classes['ServerObject'], wrap, dc)
 
     create = add
 
-    def get(self, id, wrap=True):
+    def get(self, id, wrap=True, dc=None):
         """ Retrieve an server with ID
+        :param dc: Optional datacenter name included
         :param wrap: wrap the result into Object specific class, Type: Bool, Default: True
         :param obj: server object
         :return: server key
         """
         result = self.request("%s/%s" % (self.url, id), "GET").get("droplet", {})
         return to_object(result, self.field_map,
-                         item_object_factory_classes['ServerObject'], wrap)
+                         item_object_factory_classes['ServerObject'], wrap, dc)
 
-    def reboot(self, obj, wrap=True):
+    def reboot(self, obj, wrap=True, dc=None):
         params = {"type": "reboot"}
         result = self.request("%s/%s/actions" % (self.url, obj.id), "POST", params).get("action", {})
         return to_object(result, self.field_map,
-                         item_object_factory_classes['ServerObject'], wrap)
+                         item_object_factory_classes['ServerObject'], wrap, dc)
 
 
-    def power_cycle(self, obj, wrap=True):
+    def power_cycle(self, obj, wrap=True, dc=None):
         params = {"type": "power_cycle"}
         result = self.request("%s/%s/actions" % (self.url, obj.id), "POST", params).get("action", {})
         return to_object(result, self.field_map,
-                         item_object_factory_classes['ServerObject'], wrap)
+                         item_object_factory_classes['ServerObject'], wrap, dc)
 
-    def shutdown(self, obj, wrap=True):
+    def shutdown(self, obj, wrap=True, dc=None):
         params = {"type": "shutdown"}
         result = self.request("%s/%s/actions" % (self.url, obj.id), "POST", params).get("action", {})
         return to_object(result, self.field_map,
-                         item_object_factory_classes['ServerObject'], wrap)
+                         item_object_factory_classes['ServerObject'], wrap, dc)
 
-    def power_off(self, obj, wrap=True):
+    def power_off(self, obj, wrap=True, dc=None):
         params = {"type": "power_off"}
         result = self.request("%s/%s/actions" % (self.url, obj.id), "POST", params).get("action", {})
         return to_object(result, self.field_map,
-                         item_object_factory_classes['ServerObject'], wrap)
+                         item_object_factory_classes['ServerObject'], wrap, dc)
 
-    def power_on(self, obj, wrap=True):
+    def power_on(self, obj, wrap=True, dc=None):
         params = {"type": "power_on"}
         result = self.request("%s/%s/actions" % (self.url, obj.id), "POST", params).get("action", {})
         return to_object(result, self.field_map,
-                         item_object_factory_classes['ServerObject'], wrap)
+                         item_object_factory_classes['ServerObject'], wrap, dc)
 
-    def resize(self, obj, flavor, resize_disk=False, wrap=True):
+    def resize(self, obj, flavor, resize_disk=False, wrap=True, dc=None):
         params = {"type": "resize", "disk": resize_disk, "size": flavor.id}
         result = self.request("%s/%s/actions" % (self.url, obj.id), "POST", params).get("action", {})
         return to_object(result, self.field_map,
-                         item_object_factory_classes['ServerObject'], wrap)
+                         item_object_factory_classes['ServerObject'], wrap, dc)
 
-    def rebuild(self, obj, image, wrap=True):
+    def rebuild(self, obj, image, wrap=True, dc=None):
         params = {"type": "rebuild", "image": image}
         result = self.request("%s/%s/actions" % (self.url, obj.id), "POST", params).get("action", {})
         return to_object(result, self.field_map,
-                         item_object_factory_classes['ServerObject'], wrap)
+                         item_object_factory_classes['ServerObject'], wrap, dc)
 
-    def rename(self, obj, name,  wrap=True):
+    def rename(self, obj, name,  wrap=True, dc=None):
         params = {"type": "rename", "name": name}
         result = self.request("%s/%s/actions" % (self.url, obj.id), "POST", params).get("action", {})
         return to_object(result, self.field_map,
-                         item_object_factory_classes['ServerObject'], wrap)
+                         item_object_factory_classes['ServerObject'], wrap, dc)
 
 do_v2_object_classes.update({"Server": Server})

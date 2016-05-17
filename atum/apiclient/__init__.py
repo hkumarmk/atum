@@ -22,12 +22,13 @@ item_object_factory_classes = {
 }
 
 
-def to_object(data, field_maps, cls=None, wrap=True):
+def to_object(data, field_maps, cls=None, wrap=True, dc=None):
     """It does below stuffs
     1. Convert the data to common convention,
     2. Wrap the converted data to provided class
        and return the instance of that class
 
+    :param dc: datacenter name to be set as an attribute on all objects
     :param data: this data should be either a list of dicts or dict itself
     :param field_maps: a dict of mapping values in form of {mapping: original}
     :param cls: Class to which the data to be wrapped
@@ -37,6 +38,9 @@ def to_object(data, field_maps, cls=None, wrap=True):
     if isinstance(data, list):
         new_data = []
         for instance in data:
+            if dc:
+                instance.update({"datacenter": dc})
+                field_maps.update({"datacenter": "datacenter"})
             new_data.append({
                 mapping: instance.get(orig, None) for mapping, orig in viewitems(field_maps)
             })
@@ -45,6 +49,9 @@ def to_object(data, field_maps, cls=None, wrap=True):
         else:
             return new_data
     elif isinstance(data, dict):
+        if dc:
+            data.update({"datacenter": dc})
+            field_maps.update({"datacenter": "datacenter"})
         new_data = {mapping: data.get(orig, None) for mapping, orig in viewitems(field_maps)}
         if wrap:
             return cls(**new_data)
