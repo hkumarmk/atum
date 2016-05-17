@@ -1,13 +1,16 @@
 from django.conf.urls import url, include
 from . import views
-from rest_framework.routers import DefaultRouter
+from rest_framework_nested import routers
 
-router = DefaultRouter()
-router.register(r'datacenters', views.DatacenterViewSet, base_name='datacenter')
+router = routers.SimpleRouter()
 router.register(r'users', views.UserViewSet, base_name='user')
+router.register(r'datacenters', views.DatacenterViewSet, base_name='datacenter')
+dc_router = routers.NestedSimpleRouter(router, r'datacenters', lookup='dc')
+dc_router.register(r'flavors', views.FlavorViewSet, base_name='flavor')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
+    url(r'^', include(dc_router.urls)),
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
 ]

@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from .models import Datacenter
 from django.contrib.auth.models import User
+from jsonfield import JSONField
+from .custom_serializer_field import ParameterisedHyperlinkedIdentityField
 
 
 class DatacenterSerializer(serializers.HyperlinkedModelSerializer):
@@ -9,10 +11,15 @@ class DatacenterSerializer(serializers.HyperlinkedModelSerializer):
         view_name='datacenter-detail',
         lookup_field='name'
     )
+    flavors = serializers.HyperlinkedIdentityField(
+        view_name='flavor-list',
+        lookup_url_kwarg="dc_name",
+        lookup_field='name'
+    )
 
     class Meta:
         model = Datacenter
-        fields = ('url', 'name', 'type', 'auth', 'owner')
+        fields = ('url', 'name', 'type', 'owner', 'auth', 'flavors')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -22,3 +29,23 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('url', 'username', 'datacenters')
+
+
+class FlavorSerializer(serializers.Serializer):
+
+    url = ParameterisedHyperlinkedIdentityField(
+        view_name='flavor-detail',
+        lookup_fields=(('datacenter', 'dc_name'), ('id', 'id')),
+        read_only=True
+    )
+
+    name = serializers.CharField()
+    available = serializers.BooleanField()
+    cpus = serializers.IntegerField()
+    memory = serializers.IntegerField()
+    disk = serializers.IntegerField()
+    transfer = serializers.FloatField()
+    x_cph = serializers.CharField()
+
+    class Meta:
+        fields = '__all__'
