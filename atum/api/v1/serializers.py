@@ -55,9 +55,9 @@ class DatacenterSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Datacenter
-        fields = ('url', 'name', 'type', 'owner', 'auth', 'flavors', 'images',
+        fields = ('url', 'name', 'type', 'owner', 'auth', 'region', 'flavors',
                   'regions', 'sshkeys', 'floatingips', 'tags', 'domains',
-                  'servers')
+                  'servers', 'images')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):

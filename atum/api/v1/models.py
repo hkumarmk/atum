@@ -18,3 +18,4 @@ class Datacenter(models.Model):
                             default=DIGITALOCEAN)
     auth = JSONField()
     owner = models.ForeignKey('auth.User', related_name='datacenters')
+    region = models.CharField(max_length=30)
