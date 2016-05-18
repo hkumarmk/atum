@@ -21,10 +21,15 @@ class DatacenterSerializer(serializers.HyperlinkedModelSerializer):
         lookup_url_kwarg="dc_name",
         lookup_field='name'
     )
+    regions = serializers.HyperlinkedIdentityField(
+        view_name='region-list',
+        lookup_url_kwarg="dc_name",
+        lookup_field='name'
+    )
 
     class Meta:
         model = Datacenter
-        fields = ('url', 'name', 'type', 'owner', 'auth', 'flavors', 'images')
+        fields = ('url', 'name', 'type', 'owner', 'auth', 'flavors', 'images', 'regions')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -71,6 +76,23 @@ class ImageSerializer(serializers.Serializer):
     created_at = serializers.CharField()
     x_distribution = serializers.CharField()
     x_type = serializers.CharField()
+
+    class Meta:
+        fields = '__all__'
+
+
+class RegionSerializer(serializers.Serializer):
+
+    url = ParameterisedHyperlinkedIdentityField(
+        view_name='region-detail',
+        lookup_fields=(('datacenter', 'dc_name'), ('id', 'id')),
+        read_only=True
+    )
+
+    name = serializers.CharField()
+    x_available = serializers.BooleanField()
+    x_features = serializers.CharField()
+    x_flavors = serializers.CharField()
 
     class Meta:
         fields = '__all__'

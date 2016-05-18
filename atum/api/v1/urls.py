@@ -8,6 +8,7 @@ router.register(r'datacenters', views.DatacenterViewSet, base_name='datacenter')
 dc_router = routers.NestedSimpleRouter(router, r'datacenters', lookup='dc')
 dc_router.register(r'flavors', views.FlavorViewSet, base_name='flavor')
 dc_router.register(r'images', views.ImageViewSet, base_name='image')
+dc_router.register(r'regions', views.RegionViewSet, base_name='region')
 
 urlpatterns = [
     url(r'^', include(router.urls)),

@@ -1,6 +1,5 @@
 from .models import Datacenter
-from .serializers import DatacenterSerializer, UserSerializer, FlavorSerializer, \
-    ImageSerializer
+from . import serializers
 from .permissions import IsOwner
 from django.contrib.auth.models import User
 from rest_framework import permissions
@@ -15,7 +14,7 @@ from ast import literal_eval
 class DatacenterViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,
                           IsOwner,)
-    serializer_class = DatacenterSerializer
+    serializer_class = serializers.DatacenterSerializer
     lookup_field = 'name'
 
     def get_queryset(self):
@@ -28,7 +27,7 @@ class DatacenterViewSet(ModelViewSet):
 class UserViewSet(ReadOnlyModelViewSet):
     permission_classes = (permissions.IsAdminUser,)
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = serializers.UserSerializer
 
 
 @lru_cache()
@@ -40,13 +39,13 @@ def get_client(datacenter):
 
 
 class FlavorViewSet(ViewSet):
-    serializer_class = FlavorSerializer
+    serializer_class = serializers.FlavorSerializer
     lookup_field = 'id'
 
     def list(self, request, dc_name=None):
         client = get_client(dc_name)
         flavor_list = client.flavor.list(wrap=True, dc=dc_name)
-        serializer = FlavorSerializer(
+        serializer = serializers.FlavorSerializer(
             instance=flavor_list,
             many=True,
             context={'request': request}
@@ -59,19 +58,19 @@ class FlavorViewSet(ViewSet):
 
         if not data:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = FlavorSerializer(
+        serializer = serializers.FlavorSerializer(
             instance=data, context={'request': request})
         return Response(serializer.data)
 
 
 class ImageViewSet(ViewSet):
-    serializer_class = ImageSerializer
+    serializer_class = serializers.ImageSerializer
     lookup_field = 'id'
 
     def list(self, request, dc_name=None):
         client = get_client(dc_name)
         image_list = client.image.list(wrap=True, dc=dc_name)
-        serializer = ImageSerializer(
+        serializer = serializers.ImageSerializer(
             instance=image_list,
             many=True,
             context={'request': request}
@@ -83,6 +82,30 @@ class ImageViewSet(ViewSet):
         data = client.image.get(int(id), wrap=True, dc=dc_name)
         if not data:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = ImageSerializer(
+        serializer = serializers.ImageSerializer(
+            instance=data, context={'request': request})
+        return Response(serializer.data)
+
+
+class RegionViewSet(ViewSet):
+    serializer_class = serializers.RegionSerializer
+    lookup_field = 'id'
+
+    def list(self, request, dc_name=None):
+        client = get_client(dc_name)
+        region_list = client.region.list(wrap=True, dc=dc_name)
+        serializer = serializers.RegionSerializer(
+            instance=region_list,
+            many=True,
+            context={'request': request}
+        )
+        return Response(serializer.data)
+
+    def retrieve(self, request, id, dc_name):
+        client = get_client(dc_name)
+        data = client.region.get(id, wrap=True, dc=dc_name)
+        if not data:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = serializers.RegionSerializer(
             instance=data, context={'request': request})
         return Response(serializer.data)
