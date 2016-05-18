@@ -31,10 +31,16 @@ class DatacenterSerializer(serializers.HyperlinkedModelSerializer):
         lookup_url_kwarg="dc_name",
         lookup_field='name'
     )
+    floatingips = serializers.HyperlinkedIdentityField(
+        view_name='floatingip-list',
+        lookup_url_kwarg="dc_name",
+        lookup_field='name'
+    )
 
     class Meta:
         model = Datacenter
-        fields = ('url', 'name', 'type', 'owner', 'auth', 'flavors', 'images', 'regions', 'sshkeys')
+        fields = ('url', 'name', 'type', 'owner', 'auth', 'flavors', 'images',
+                  'regions', 'sshkeys', 'floatingips')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -114,6 +120,22 @@ class SSHKeySerializer(serializers.Serializer):
     name = serializers.CharField()
     fingerprint = serializers.CharField()
     public_key = serializers.CharField()
+
+    class Meta:
+        fields = '__all__'
+
+
+class FloatingIPSerializer(serializers.Serializer):
+
+    url = ParameterisedHyperlinkedIdentityField(
+        view_name='floatingip-detail',
+        lookup_fields=(('datacenter', 'dc_name'), ('id', 'id')),
+        read_only=True
+    )
+
+    name = serializers.CharField()
+    ip = serializers.CharField()
+    server = serializers.CharField()
 
     class Meta:
         fields = '__all__'

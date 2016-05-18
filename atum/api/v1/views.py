@@ -142,3 +142,26 @@ class SSHKeyViewSet(ViewSet):
             instance=data, context={'request': request})
         return Response(serializer.data)
 
+
+class FloatingIPViewSet(ViewSet):
+    serializer_class = serializers.FloatingIPSerializer
+    lookup_field = 'id'
+
+    def list(self, request, dc_name=None):
+        client = get_client(dc_name)
+        floatingip_list = client.floatingip.list(wrap=True, dc=dc_name)
+        serializer = serializers.FloatingIPSerializer(
+            instance=floatingip_list,
+            many=True,
+            context={'request': request}
+        )
+        return Response(serializer.data)
+
+    def retrieve(self, request, id, dc_name):
+        client = get_client(dc_name)
+        data = client.floatingip.get(id, wrap=True, dc=dc_name)
+        if not data:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = serializers.FloatingIPSerializer(
+            instance=data, context={'request': request})
+        return Response(serializer.data)

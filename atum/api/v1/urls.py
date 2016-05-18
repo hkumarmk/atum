@@ -10,6 +10,7 @@ dc_router.register(r'flavors', views.FlavorViewSet, base_name='flavor')
 dc_router.register(r'images', views.ImageViewSet, base_name='image')
 dc_router.register(r'regions', views.RegionViewSet, base_name='region')
 dc_router.register(r'sshkeys', views.SSHKeyViewSet, base_name='sshkey')
+dc_router.register(r'floatingips', views.FloatingIPViewSet, base_name='floatingip')
 
 urlpatterns = [
     url(r'^$', views.api_root),
