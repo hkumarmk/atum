@@ -1,4 +1,4 @@
-from .models import Datacenter
+from .models import Datacenter, Provider
 from . import serializers
 from .permissions import IsOwner
 from django.contrib.auth.models import User
@@ -13,11 +13,27 @@ from atum.apiclient import get_client as atum_get_client
 from ast import literal_eval
 from atum.common import exceptions
 
+
 @api_view(['GET'])
 def api_root(request, format=None):
     return Response({
+        'providers': reverse('provider-list', request=request, format=format),
         'datacenters': reverse('datacenter-list', request=request, format=format),
     })
+
+
+class ProviderViewSet(ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,
+                          IsOwner,)
+    serializer_class = serializers.ProviderSerializer
+    lookup_field = 'name'
+
+    def get_queryset(self):
+        return Provider.objects.filter(owner=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 
 class DatacenterViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,
@@ -41,9 +57,9 @@ class UserViewSet(ReadOnlyModelViewSet):
 @lru_cache()
 def get_client(datacenter):
     dc_obj = Datacenter.objects.get(name=datacenter)
-    auth_data = literal_eval(dc_obj.auth)
-    dc_type = dc_obj.type
-    return atum_get_client(dc_type, auth_data)
+    auth_data = literal_eval(dc_obj.provider.auth)
+    provider_type = dc_obj.provider.type
+    return atum_get_client(provider_type, auth_data)
 
 
 class FlavorViewSet(ViewSet):

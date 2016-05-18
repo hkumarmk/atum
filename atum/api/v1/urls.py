@@ -4,6 +4,7 @@ from rest_framework_nested import routers
 
 router = routers.SimpleRouter()
 router.register(r'users', views.UserViewSet, base_name='user')
+router.register(r'providers', views.ProviderViewSet, base_name='provider')
 router.register(r'datacenters', views.DatacenterViewSet, base_name='datacenter')
 dc_router = routers.NestedSimpleRouter(router, r'datacenters', lookup='dc')
 dc_router.register(r'flavors', views.FlavorViewSet, base_name='flavor')

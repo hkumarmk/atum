@@ -1,16 +1,33 @@
 from rest_framework import serializers
-from .models import Datacenter
+from .models import Datacenter, Provider
 from django.contrib.auth.models import User
 from .custom_serializer_field import ParameterisedHyperlinkedIdentityField
 
 
+class ProviderSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.HyperlinkedIdentityField(
+        view_name='provider-detail',
+        lookup_field='name'
+    )
+    owner = serializers.ReadOnlyField(source='owner.username')
+    datacenters = serializers.HyperlinkedRelatedField(
+        many=True, view_name='datacenter-detail', read_only=True, lookup_field='name')
+
+    class Meta:
+        model = Provider
+        fields = ('url', 'name', 'type', 'owner', 'auth', 'datacenters')
+
+
 class DatacenterSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
+    provider = serializers.HyperlinkedRelatedField(
+        view_name='provider-detail',
+        queryset=Provider.objects.all(),
+        lookup_field='name')
     url = serializers.HyperlinkedIdentityField(
         view_name='datacenter-detail',
         lookup_field='name'
     )
-
     flavors = serializers.HyperlinkedIdentityField(
         view_name='flavor-list',
         lookup_url_kwarg="dc_name",
@@ -52,12 +69,11 @@ class DatacenterSerializer(serializers.HyperlinkedModelSerializer):
         lookup_field='name'
     )
 
-
     class Meta:
         model = Datacenter
-        fields = ('url', 'name', 'type', 'owner', 'auth', 'region', 'flavors',
-                  'regions', 'sshkeys', 'floatingips', 'tags', 'domains',
-                  'servers', 'images')
+        fields = ("url", "name", "provider", "owner", "region", "flavors",
+                  "regions", "sshkeys", "floatingips", "tags", "domains",
+                  "servers", "images")
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
