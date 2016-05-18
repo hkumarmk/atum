@@ -46,6 +46,9 @@ class InvalidArgumentError(ValueError):
 class APIRequestError(AtumException):
     pass
 
+class APIResourceNotFoundError(AtumException):
+    pass
+
 
 class AtumProvisionerException(AtumException):
     pass

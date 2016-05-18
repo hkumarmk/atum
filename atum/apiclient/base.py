@@ -125,6 +125,8 @@ class BaseAPIClient(object):
                     raise exceptions.APIResponseError(
                         "Server response error. {:d} {:s}".format(
                             response.status_code, response.reason))
+                if response.status_code == 404:
+                    raise exceptions.APIResourceNotFoundError
 
                 raise exceptions.APIRequestError("{:d} {:s}. Message: {:s}".format(
                     response.status_code, response.reason, result["message"]))
