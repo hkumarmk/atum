@@ -1,5 +1,6 @@
 from .models import Datacenter
-from .serializers import DatacenterSerializer, UserSerializer, FlavorSerializer
+from .serializers import DatacenterSerializer, UserSerializer, FlavorSerializer, \
+    ImageSerializer
 from .permissions import IsOwner
 from django.contrib.auth.models import User
 from rest_framework import permissions
@@ -60,5 +61,28 @@ class FlavorViewSet(ViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = FlavorSerializer(
             instance=data, context={'request': request})
+        return Response(serializer.data)
 
+
+class ImageViewSet(ViewSet):
+    serializer_class = ImageSerializer
+    lookup_field = 'id'
+
+    def list(self, request, dc_name=None):
+        client = get_client(dc_name)
+        image_list = client.image.list(wrap=True, dc=dc_name)
+        serializer = ImageSerializer(
+            instance=image_list,
+            many=True,
+            context={'request': request}
+        )
+        return Response(serializer.data)
+
+    def retrieve(self, request, id, dc_name):
+        client = get_client(dc_name)
+        data = client.image.get(int(id), wrap=True, dc=dc_name)
+        if not data:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = ImageSerializer(
+            instance=data, context={'request': request})
         return Response(serializer.data)
