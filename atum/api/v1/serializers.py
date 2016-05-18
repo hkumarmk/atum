@@ -41,11 +41,17 @@ class DatacenterSerializer(serializers.HyperlinkedModelSerializer):
         lookup_url_kwarg="dc_name",
         lookup_field='name'
     )
+    domains = serializers.HyperlinkedIdentityField(
+        view_name='domain-list',
+        lookup_url_kwarg="dc_name",
+        lookup_field='name'
+    )
+
 
     class Meta:
         model = Datacenter
         fields = ('url', 'name', 'type', 'owner', 'auth', 'flavors', 'images',
-                  'regions', 'sshkeys', 'floatingips', 'tags')
+                  'regions', 'sshkeys', 'floatingips', 'tags', 'domains')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -156,6 +162,22 @@ class TagSerializer(serializers.Serializer):
 
     name = serializers.CharField()
     resources = serializers.CharField()
+
+    class Meta:
+        fields = '__all__'
+
+
+class DomainSerializer(serializers.Serializer):
+
+    url = ParameterisedHyperlinkedIdentityField(
+        view_name='domain-detail',
+        lookup_fields=(('datacenter', 'dc_name'), ('id', 'id')),
+        read_only=True
+    )
+
+    name = serializers.CharField()
+    ttl = serializers.CharField()
+    zone = serializers.CharField()
 
     class Meta:
         fields = '__all__'

@@ -11,7 +11,7 @@ from rest_framework.reverse import reverse
 from rest_framework.decorators import api_view
 from atum.apiclient import get_client as atum_get_client
 from ast import literal_eval
-
+from atum.common import exceptions
 
 @api_view(['GET'])
 def api_root(request, format=None):
@@ -187,5 +187,33 @@ class TagViewSet(ViewSet):
         if not data:
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = serializers.TagSerializer(
+            instance=data, context={'request': request})
+        return Response(serializer.data)
+
+
+class DomainViewSet(ViewSet):
+    serializer_class = serializers.DomainSerializer
+    lookup_field = 'id'
+
+    def list(self, request, dc_name=None):
+        client = get_client(dc_name)
+        domain_list = client.domain.list(wrap=True, dc=dc_name)
+        serializer = serializers.DomainSerializer(
+            instance=domain_list,
+            many=True,
+            context={'request': request}
+        )
+        return Response(serializer.data)
+
+    def retrieve(self, request, id, dc_name):
+        client = get_client(dc_name)
+        try:
+            data = client.domain.get(id, wrap=True, dc=dc_name)
+        except exceptions.APIResourceNotFoundError:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if not data:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = serializers.DomainSerializer(
             instance=data, context={'request': request})
         return Response(serializer.data)

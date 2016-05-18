@@ -12,6 +12,7 @@ dc_router.register(r'regions', views.RegionViewSet, base_name='region')
 dc_router.register(r'sshkeys', views.SSHKeyViewSet, base_name='sshkey')
 dc_router.register(r'floatingips', views.FloatingIPViewSet, base_name='floatingip')
 dc_router.register(r'tags', views.TagViewSet, base_name='tag')
+dc_router.register(r'domains', views.DomainViewSet, base_name='domain')
 
 urlpatterns = [
     url(r'^$', views.api_root),
