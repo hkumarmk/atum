@@ -12,6 +12,7 @@ dc_router.register(r'regions', views.RegionViewSet, base_name='region')
 dc_router.register(r'sshkeys', views.SSHKeyViewSet, base_name='sshkey')
 
 urlpatterns = [
+    url(r'^$', views.api_root),
     url(r'^', include(router.urls)),
     url(r'^', include(dc_router.urls)),
     url(r'^api-auth/', include('rest_framework.urls',

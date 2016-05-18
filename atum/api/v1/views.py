@@ -7,9 +7,17 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet, ModelViewSet, ViewSet
 from functools import lru_cache
 from rest_framework import status
+from rest_framework.reverse import reverse
+from rest_framework.decorators import api_view
 from atum.apiclient import get_client as atum_get_client
 from ast import literal_eval
 
+
+@api_view(['GET'])
+def api_root(request, format=None):
+    return Response({
+        'datacenters': reverse('datacenter-list', request=request, format=format),
+    })
 
 class DatacenterViewSet(ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,
