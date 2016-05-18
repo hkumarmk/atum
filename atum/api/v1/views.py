@@ -165,3 +165,27 @@ class FloatingIPViewSet(ViewSet):
         serializer = serializers.FloatingIPSerializer(
             instance=data, context={'request': request})
         return Response(serializer.data)
+
+
+class TagViewSet(ViewSet):
+    serializer_class = serializers.TagSerializer
+    lookup_field = 'id'
+
+    def list(self, request, dc_name=None):
+        client = get_client(dc_name)
+        tag_list = client.tag.list(wrap=True, dc=dc_name)
+        serializer = serializers.TagSerializer(
+            instance=tag_list,
+            many=True,
+            context={'request': request}
+        )
+        return Response(serializer.data)
+
+    def retrieve(self, request, id, dc_name):
+        client = get_client(dc_name)
+        data = client.tag.get(id, wrap=True, dc=dc_name)
+        if not data:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = serializers.TagSerializer(
+            instance=data, context={'request': request})
+        return Response(serializer.data)
