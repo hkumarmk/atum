@@ -46,12 +46,18 @@ class DatacenterSerializer(serializers.HyperlinkedModelSerializer):
         lookup_url_kwarg="dc_name",
         lookup_field='name'
     )
+    servers = serializers.HyperlinkedIdentityField(
+        view_name='server-list',
+        lookup_url_kwarg="dc_name",
+        lookup_field='name'
+    )
 
 
     class Meta:
         model = Datacenter
         fields = ('url', 'name', 'type', 'owner', 'auth', 'flavors', 'images',
-                  'regions', 'sshkeys', 'floatingips', 'tags', 'domains')
+                  'regions', 'sshkeys', 'floatingips', 'tags', 'domains',
+                  'servers')
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -178,6 +184,34 @@ class DomainSerializer(serializers.Serializer):
     name = serializers.CharField()
     ttl = serializers.CharField()
     zone = serializers.CharField()
+
+    class Meta:
+        fields = '__all__'
+
+
+class ServerSerializer(serializers.Serializer):
+
+    url = ParameterisedHyperlinkedIdentityField(
+        view_name='server-detail',
+        lookup_fields=(('datacenter', 'dc_name'), ('id', 'id')),
+        read_only=True
+    )
+
+    name = serializers.CharField()
+    cpus = serializers.IntegerField()
+    memory = serializers.IntegerField()
+    disk = serializers.IntegerField()
+    status = serializers.CharField()
+    created_at = serializers.CharField()
+    image = serializers.CharField()
+    flavor = serializers.CharField()
+    networks = serializers.CharField()
+    x_tags = serializers.CharField()
+    x_locked = serializers.BooleanField()
+    x_kernel = serializers.CharField()
+    x_features = serializers.CharField()
+    x_backup_ids = serializers.CharField()
+    x_snapshot_ids = serializers.CharField()
 
     class Meta:
         fields = '__all__'

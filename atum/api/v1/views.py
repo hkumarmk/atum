@@ -217,3 +217,31 @@ class DomainViewSet(ViewSet):
         serializer = serializers.DomainSerializer(
             instance=data, context={'request': request})
         return Response(serializer.data)
+
+
+class ServerViewSet(ViewSet):
+    serializer_class = serializers.ServerSerializer
+    lookup_field = 'id'
+
+    def list(self, request, dc_name=None):
+        client = get_client(dc_name)
+        server_list = client.server.list(wrap=True, dc=dc_name)
+        serializer = serializers.ServerSerializer(
+            instance=server_list,
+            many=True,
+            context={'request': request}
+        )
+        return Response(serializer.data)
+
+    def retrieve(self, request, id, dc_name):
+        client = get_client(dc_name)
+        try:
+            data = client.server.get(id, wrap=True, dc=dc_name)
+        except exceptions.APIResourceNotFoundError:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if not data:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = serializers.ServerSerializer(
+            instance=data, context={'request': request})
+        return Response(serializer.data)
