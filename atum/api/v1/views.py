@@ -109,3 +109,28 @@ class RegionViewSet(ViewSet):
         serializer = serializers.RegionSerializer(
             instance=data, context={'request': request})
         return Response(serializer.data)
+
+
+class SSHKeyViewSet(ViewSet):
+    serializer_class = serializers.SSHKeySerializer
+    lookup_field = 'id'
+
+    def list(self, request, dc_name=None):
+        client = get_client(dc_name)
+        sshkey_list = client.sshkey.list(wrap=True, dc=dc_name)
+        serializer = serializers.SSHKeySerializer(
+            instance=sshkey_list,
+            many=True,
+            context={'request': request}
+        )
+        return Response(serializer.data)
+
+    def retrieve(self, request, id, dc_name):
+        client = get_client(dc_name)
+        data = client.sshkey.get(id, wrap=True, dc=dc_name)
+        if not data:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = serializers.SSHKeySerializer(
+            instance=data, context={'request': request})
+        return Response(serializer.data)
+

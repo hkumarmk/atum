@@ -9,6 +9,7 @@ dc_router = routers.NestedSimpleRouter(router, r'datacenters', lookup='dc')
 dc_router.register(r'flavors', views.FlavorViewSet, base_name='flavor')
 dc_router.register(r'images', views.ImageViewSet, base_name='image')
 dc_router.register(r'regions', views.RegionViewSet, base_name='region')
+dc_router.register(r'sshkeys', views.SSHKeyViewSet, base_name='sshkey')
 
 urlpatterns = [
     url(r'^', include(router.urls)),
